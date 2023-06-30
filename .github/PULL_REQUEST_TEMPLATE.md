@@ -8,7 +8,7 @@
 
 <!-- If there is an associated issue, link it here -->
 
-### Checklist
+### TypeList - Checklist
 
 <!-- Mark the items that are applicable to this pull request. -->
 
@@ -17,6 +17,17 @@
 - [ ] Documentation has been updated, if necessary
 - [ ] All tests pass successfully
 - [ ] The code is ready for review and merge
+
+### Terraform - Checklist
+
+<!-- Mark the items that are applicable to this pull request. -->
+
+- [ ] The Terraform code follows the project's coding style guidelines
+- [ ] The Terraform configuration has been tested and verified locally
+- [ ] The Terraform code includes appropriate error handling and input validation
+- [ ] Documentation has been updated, if necessary, to reflect the changes
+- [ ] Security considerations have been taken into account
+- [ ] The Terraform code is ready for review and merge
 
 ### Additional Notes
 
