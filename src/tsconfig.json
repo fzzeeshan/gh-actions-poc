@@ -1,4 +1,0 @@
-{
-    "files": ["./lib/utils.ts", "./microservice-one/function.ts", "./microservice-two/function.ts"],
-    "compilerOptions": {"outDir": "./dist"}
-}
