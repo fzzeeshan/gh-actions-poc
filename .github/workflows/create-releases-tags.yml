@@ -27,9 +27,15 @@ jobs:
           release_name: Release v1.0.0
           draft: false
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Get Commit SHA
+        id: get_commit_sha
+        run: echo "::set-output name=commit_sha::$(git rev-parse HEAD)"
 
       - name: Create Tag
         if: steps.create_release.outputs.release_id
         run: |
-          git tag v1.0.0 ${{ github.ref }}
+          git tag v1.0.0 ${{ steps.get_commit_sha.outputs.commit_sha }}
           git push origin --tags
