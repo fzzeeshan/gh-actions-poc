@@ -27,8 +27,6 @@ jobs:
           release_name: Release v1.0.0
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
       - name: Get Commit SHA
         id: get_commit_sha
