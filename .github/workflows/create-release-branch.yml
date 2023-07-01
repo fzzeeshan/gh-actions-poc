@@ -42,7 +42,7 @@ jobs:
           SELECTED_MICROSERVICES="${SELECTED_MICROSERVICES%,}" # Remove trailing comma
           IFS=',' read -ra SERVICES <<< "$SELECTED_MICROSERVICES"
           for SERVICE in "${SERVICES[@]}"; do
-            git checkout release/${{ github.event.inputs.release-version }}
+            git checkout -b release/${{ github.event.inputs.release-version }}
             git merge develop --no-commit --no-ff --strategy-option=ours -- backend-api/$SERVICE
           done
           git commit -m "Merge changes from develop for microservices: $SELECTED_MICROSERVICES"
