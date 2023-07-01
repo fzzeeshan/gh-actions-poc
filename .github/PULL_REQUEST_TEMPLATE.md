@@ -1,5 +1,13 @@
 ## Pull Request
 
+### PR Type
+- [ ] ✨ Enhancement
+- [ ] 🐛 Bug Fix
+- [ ] 🚀 New Feature
+- [ ] 🔨 Refactoring
+- [ ] 📚 Documentation
+- [ ] 🌟 Other
+
 ### Description
 
 <!-- Provide a brief summary of the changes introduced by this pull request -->
