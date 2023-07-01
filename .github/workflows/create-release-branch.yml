@@ -44,6 +44,7 @@ jobs:
           for SERVICE in "${SERVICES[@]}"; do
             git checkout -b release/${{ github.event.inputs.release-version }}
             git merge develop --no-commit --no-ff --strategy-option=ours -- backend-api/$SERVICE
-          done
-          git commit -m "Merge changes from develop for microservices: $SELECTED_MICROSERVICES"
+            git add .
+            git commit -m "Merge changes from develop for microservice: $SERVICE"
+          done        
           git push origin release/${{ github.event.inputs.release-version }}
