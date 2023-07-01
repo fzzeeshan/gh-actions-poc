@@ -1,12 +1,12 @@
 ## Pull Request
 
 ### PR Type
-- [ ] ✨ Enhancement
-- [ ] 🐛 Bug Fix
-- [ ] 🚀 New Feature
-- [ ] 🔨 Refactoring
-- [ ] 📚 Documentation
-- [ ] 🌟 Other
+- [ ] ✨ Enhancement <!-- Apply the "enhancement" label -->
+- [ ] 🐛 Bug Fix <!-- Apply the "bug" label -->
+- [ ] 🚀 New Feature <!-- Apply the "feature" label -->
+- [ ] 🔨 Refactoring <!-- Apply the "refactoring" label -->
+- [ ] 📚 Documentation <!-- Apply the "documentation" label -->
+- [ ] 🌟 Other <!-- Apply the "other" label -->
 
 ### Description
 
