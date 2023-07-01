@@ -19,15 +19,19 @@ jobs:
         with:
           node-version: 14
 
+      - name: Fetch latest changes
+        run: git fetch origin
+
       - name: Determine Modified Folders
         id: changes
-        run: echo "::set-output name=folders::$(git diff --name-only origin/develop ${{ github.event.pull_request.head.ref }} | awk -F/ '{print $1"/"$2}' | sort -u)"
+        run: |
+          echo "FOLDERS=$(git diff --name-only origin/develop ${{ github.event.pull_request.head.ref }} | awk -F/ '{print $1"/"$2}' | sort -u)" >> $GITHUB_ENV
 
       - name: Check Modified Folders
         id: check-folders
         run: |
-          if [[ "${{ steps.changes.outputs.folders }}" == "backend-api"* ]]; then
-            echo "Modified folders: ${{ steps.changes.outputs.folders }}"
+          if [[ "${{ env.FOLDERS }}" == "backend-api"* ]]; then
+            echo "Modified folders: ${{ env.FOLDERS }}"
           else
             echo "No backend-api folder changes. Skipping tests."
             exit 0
@@ -36,7 +40,7 @@ jobs:
       - name: Run Unit Tests
         if: ${{ steps.check-folders.outcome == 'success' }}
         run: |
-          for folder in ${{ steps.changes.outputs.folders }}; do
+          for folder in ${{ env.FOLDERS }}; do
             echo "Running tests in $folder..."
             cd $folder
             npm ci
