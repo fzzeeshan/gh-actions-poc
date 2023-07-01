@@ -6,13 +6,18 @@ on:
       release-version:
         description: "Release branch version"
         required: true
-      microservices:
-        description: "Select microservices"
+      microservice-one:
+        description: 'microservice-one'
         required: true
-        default: |
-          microservice-one
-          microservice-two
-          lib
+        default: true
+      microservice-two:
+        description: 'Microservice-two'
+        required: true
+        default: false
+      lib:
+        description: 'lib'
+        required: true
+        default: true
 
 jobs:
   create-release-branch:
@@ -24,12 +29,21 @@ jobs:
 
       - name: Merge changes from develop
         run: |
-          SELECTED_MICROSERVICES="${{ github.event.inputs.microservices }}"
-          IFS=$'\n' read -d '' -ra SERVICES <<< "$SELECTED_MICROSERVICES"
+          SELECTED_MICROSERVICES=""
+          if [ "${{ github.event.inputs.microservice-one }}" == "true" ]; then
+            SELECTED_MICROSERVICES+="microservice-one,"
+          fi
+          if [ "${{ github.event.inputs.microservice-two }}" == "true" ]; then
+            SELECTED_MICROSERVICES+="microservice-two,"
+          fi
+          if [ "${{ github.event.inputs.lib }}" == "true" ]; then
+            SELECTED_MICROSERVICES+="lib,"
+          fi
+          SELECTED_MICROSERVICES="${SELECTED_MICROSERVICES%,}" # Remove trailing comma
+          IFS=',' read -ra SERVICES <<< "$SELECTED_MICROSERVICES"
           for SERVICE in "${SERVICES[@]}"; do
             git checkout release/${{ github.event.inputs.release-version }}
-            git merge develop --no-commit --no-ff --strategy-option=ours -- backend/$SERVICE
+            git merge develop --no-commit --no-ff --strategy-option=ours -- backend-api/$SERVICE
           done
           git commit -m "Merge changes from develop for microservices: $SELECTED_MICROSERVICES"
           git push origin release/${{ github.event.inputs.release-version }}
-          
