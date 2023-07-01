@@ -32,8 +32,8 @@ jobs:
               echo "Creating test-results structure for $folder..."
               mkdir -p coverage
               echo "Moving test-results structure for $folder..."              
-              mv coverage/lcov-report "$folder"
-              cd ..
+              mv ./coverage/lcov-report "$folder"
+              cd ../..
             fi
             echo "Completed running tests in backend-api folder..."
           done
