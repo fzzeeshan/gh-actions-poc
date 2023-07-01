@@ -16,6 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
       - name: Set branch type environment variable
         run: echo "BRANCH_TYPE=${{ github.event.inputs.branch_type }}" >> $GITHUB_ENV
           
