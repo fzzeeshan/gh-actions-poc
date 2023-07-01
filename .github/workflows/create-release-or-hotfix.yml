@@ -45,4 +45,4 @@ jobs:
           git push --set-upstream origin $target_branch
           
         env:
-          REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
