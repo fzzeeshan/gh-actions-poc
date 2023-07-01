@@ -1,0 +1,54 @@
+name: Run Unit Tests
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Fetch latest changes
+        run: git fetch origin
+
+      - name: Determine Modified Folders
+        id: changes
+        run: |
+          folders=$(git diff --name-only origin/develop origin/${{ github.event.pull_request.head.ref }} | xargs -I % dirname % | sort -u)
+          if [[ "$folders" == "backend-api"* ]]; then
+            echo "Modified folders: $folders"
+          else
+            echo "No backend-api folder changes. Skipping tests."
+            exit 0
+          fi
+
+      - name: Run Unit Tests
+        if: ${{ steps.check-folders.outcome == 'success' }}
+        run: |
+          for folder in ${{ env.FOLDERS }}; do
+            echo "Running tests in $folder..."
+            cd $folder
+            npm ci
+            npm test
+            mkdir -p ../test-results/$folder
+            cp -r test-results/* ../test-results/$folder
+            cd ..
+          done
+
+      - name: Save Test Results
+        if: ${{ steps.check-folders.outcome == 'success' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: test-results
