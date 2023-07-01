@@ -1,0 +1,39 @@
+name: Create Release Branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-version:
+        description: "Release branch version"
+        required: true
+
+jobs:
+  create-release-branch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Fetch microservice options
+        id: fetch-microservices
+        run: |
+          MICROSERVICES=$(git ls-tree --name-only develop:backend-api)
+          echo "{microservices}={$MICROSERVICES}" >> "$GITHUB_ENV"
+
+      - name: Select Microservices
+        id: checkbox
+        uses: technote-space/github-action-checkbox@v1
+        with:
+          options: ${{ env.microservices }}
+
+      - name: Merge changes from develop
+        run: |
+          SELECTED_MICROSERVICES="${{ steps.checkbox.outputs.result }}"
+          IFS=',' read -ra SERVICES <<< "$SELECTED_MICROSERVICES"
+          for SERVICE in "${SERVICES[@]}"; do
+            git checkout "release/${{ github.event.inputs.release-version }}"
+            git merge develop --no-commit --no-ff --strategy-option=ours -- backend/$SERVICE
+          done
+          git commit -m "Merge changes from develop for microservices: $SELECTED_MICROSERVICES"
+          git push origin "release/${{ github.event.inputs.release-version }}"
