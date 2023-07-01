@@ -34,9 +34,10 @@ jobs:
           fi
 
       - name: Run Unit Tests
-        if: ${{ steps.check-folders.outcome == 'success' }}
+        id: run-unit-tests
+        if: ${{ steps.changes.outcome == 'success' }}
         run: |
-          for folder in ${{ env.FOLDERS }}; do
+          for folder in $folders; do
             echo "Running tests in $folder..."
             cd $folder
             npm ci
@@ -47,7 +48,7 @@ jobs:
           done
 
       - name: Save Test Results
-        if: ${{ steps.check-folders.outcome == 'success' }}
+        if: ${{ steps.run-unit-tests.outcome == 'success' }}
         uses: actions/upload-artifact@v2
         with:
           name: test-results
