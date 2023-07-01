@@ -25,7 +25,8 @@ jobs:
       - name: Determine Modified Folders
         id: changes
         run: |
-          echo "::set-env name=FOLDERS::$(git diff --name-only origin/develop origin/${{ github.event.pull_request.head.ref }} | xargs -I % dirname % | sort -u)"
+          folders=$(git diff --name-only origin/develop origin/${{ github.event.pull_request.head.ref }} | xargs -I % dirname % | sort -u)
+          echo "##[set-output name=folders;]$folders"
 
       - name: Check Modified Folders
         id: check-folders
