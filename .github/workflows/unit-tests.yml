@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install Dependencies and Run Unit Tests
+      - name: Install Dependencies and Run Unit Tests v1
         id: changes
         run: |
           for folder in backend-api/*; do
@@ -29,10 +29,10 @@ jobs:
               npm ci
               echo "Running tests in $folder..."
               npm test > test-results.txt
-              echo "Creating test-results structure for $folder..."
-              mkdir -p coverage
+              echo "Creating test-results structure for $folder..."              
+              mkdir -p ../../test-results/"$folder"
               echo "Moving test-results structure for $folder..."              
-              mv ./coverage/lcov-report "$folder"
+              mv ./coverage/lcov-report ../../test-results/"$folder"/coverage
               cd ../..
             fi
             echo "Completed running tests in backend-api folder..."
@@ -43,5 +43,4 @@ jobs:
         with:
           name: test-results
           path: |
-            backend-api/*/test-results.txt
-            backend-api/*/coverage
+            test-results
