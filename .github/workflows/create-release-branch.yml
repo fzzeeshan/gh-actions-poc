@@ -43,7 +43,7 @@ jobs:
           IFS=',' read -ra SERVICES <<< "$SELECTED_MICROSERVICES"
           for SERVICE in "${SERVICES[@]}"; do
             git checkout -b release/${{ github.event.inputs.release-version }}
-            git merge develop --no-commit --no-ff --strategy-option=ours -- backend-api/$SERVICE
+            git merge origin/develop --no-commit --no-ff --strategy-option=ours -- backend-api/$SERVICE
             git add .
             git commit -m "Merge changes from develop for microservice: $SERVICE"
           done        
