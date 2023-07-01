@@ -1,0 +1,38 @@
+name: Create Release/Hotfix Branch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-branch:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Prompt for branch type
+        run: |
+          echo "BRANCH_TYPE=$(read -p 'Enter branch type (release/hotfix): ' type && echo $type)" >> $GITHUB_ENV
+          
+      - name: Prompt for branch name
+        run: |
+          echo "BRANCH_NAME=$(read -p 'Enter branch name: ' name && echo $name)" >> $GITHUB_ENV
+          
+      - name: Create branch
+        run: |
+          if [[ "${{ env.BRANCH_TYPE }}" == "release" ]]; then
+            source_branch="develop"
+            target_branch="release/${{ env.BRANCH_NAME }}"
+          elif [[ "${{ env.BRANCH_TYPE }}" == "hotfix" ]]; then
+            source_branch="main"
+            target_branch="hotfix/${{ env.BRANCH_NAME }}"
+          else
+            echo "Invalid branch type entered."
+            exit 1
+          fi
+          
+          git checkout $source_branch
+          git pull origin $source_branch
+          git checkout -b $target_branch
+          git push --set-upstream origin $target_branch
+          
+        env:
+          REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
