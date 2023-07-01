@@ -1,10 +1,10 @@
 {
   "name": "microservice-two",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "webpack",
     "test": "jest --config jest.config.js --coverage"
   },
   "keywords": [],
@@ -13,7 +13,10 @@
     "@types/jest": "^29.5.2",
     "jest": "^29.5.0",
     "ts-jest": "^29.1.1",
-    "typescript": "^5.1.6"
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4"
   },
   "license": "ISC"
 }
