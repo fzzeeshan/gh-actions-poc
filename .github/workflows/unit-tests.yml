@@ -19,13 +19,35 @@ jobs:
         with:
           node-version: 14
 
-      - name: Install Dependencies
-        run: npm ci
+      - name: Determine Modified Folders
+        id: changes
+        run: echo "::set-output name=folders::$(git diff --name-only origin/develop ${{ github.event.pull_request.head.ref }} | awk -F/ '{print $1"/"$2}' | sort -u)"
+
+      - name: Check Modified Folders
+        id: check-folders
+        run: |
+          if [[ "${{ steps.changes.outputs.folders }}" == "backend-api"* ]]; then
+            echo "Modified folders: ${{ steps.changes.outputs.folders }}"
+          else
+            echo "No backend-api folder changes. Skipping tests."
+            exit 0
+          fi
 
       - name: Run Unit Tests
-        run: npm test
+        if: ${{ steps.check-folders.outcome == 'success' }}
+        run: |
+          for folder in ${{ steps.changes.outputs.folders }}; do
+            echo "Running tests in $folder..."
+            cd $folder
+            npm ci
+            npm test
+            mkdir -p ../test-results/$folder
+            cp -r test-results/* ../test-results/$folder
+            cd ..
+          done
 
       - name: Save Test Results
+        if: ${{ steps.check-folders.outcome == 'success' }}
         uses: actions/upload-artifact@v2
         with:
           name: test-results
