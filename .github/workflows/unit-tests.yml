@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 18
 
-      - name: Determine Modified Folders
+      - name: Install Dependencies and Run Unit Tests
         id: changes
         run: |
           for folder in backend-api/*; do
@@ -28,19 +28,20 @@ jobs:
               echo "Installing dependencies in  $folder"
               npm ci
               echo "Running tests in $folder..."
-              npm test
+              npm test > test-results.txt
               echo "Creating test-results structure for $folder..."
-              mkdir -p ../test-results/$folder
-              echo "Copying test-results structure for $folder..."
-              cp -r test-results/* ../test-results/$folder
+              mkdir -p coverage
+              echo "Moving test-results structure for $folder..."              
+              mv coverage/lcov-report "$folder"
               cd ..
             fi
             echo "Completed running tests in backend-api folder..."
           done
 
       - name: Save Test Results
-        if: ${{ steps.changes.outcome == 'success' }}
         uses: actions/upload-artifact@v2
         with:
           name: test-results
-          path: test-results
+          path: |
+            backend-api/*/test-results.txt
+            backend-api/*/coverage
