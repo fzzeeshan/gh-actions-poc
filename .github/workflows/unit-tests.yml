@@ -32,11 +32,6 @@ jobs:
             echo "No backend-api folder changes. Skipping tests."
             exit 0
           fi
-
-      - name: Run Unit Tests
-        id: run-unit-tests
-        if: ${{ steps.changes.outcome == 'success' }}
-        run: |
           for folder in $folders; do
             echo "Running tests in $folder..."
             cd $folder
@@ -48,7 +43,7 @@ jobs:
           done
 
       - name: Save Test Results
-        if: ${{ steps.run-unit-tests.outcome == 'success' }}
+        if: ${{ steps.changes.outcome == 'success' }}
         uses: actions/upload-artifact@v2
         with:
           name: test-results
