@@ -1,20 +1,26 @@
-name: Create Release/Hotfix Branch
+name: Create Branch
 
 on:
   workflow_dispatch:
+    inputs:
+      branch_type:
+        description: 'Branch type (release/hotfix)'
+        required: true
+        default: 'release'
+      branch_name:
+        description: 'Branch name'
+        required: true
 
 jobs:
   create-branch:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Prompt for branch type
-        run: |
-          echo "BRANCH_TYPE=$(read -p 'Enter branch type (release/hotfix): ' type && echo $type)" >> $GITHUB_ENV
+      - name: Set branch type environment variable
+        run: echo "BRANCH_TYPE=${{ github.event.inputs.branch_type }}" >> $GITHUB_ENV
           
-      - name: Prompt for branch name
-        run: |
-          echo "BRANCH_NAME=$(read -p 'Enter branch name: ' name && echo $name)" >> $GITHUB_ENV
+      - name: Set branch name environment variable
+        run: echo "BRANCH_NAME=${{ github.event.inputs.branch_name }}" >> $GITHUB_ENV
           
       - name: Create branch
         run: |
