@@ -3,5 +3,5 @@ export function sayHello(name : string) : string{
 }
 
 
-var welcomeMessage = sayHello("Clive");
+var welcomeMessage = sayHello("Back to David");
 console.log(welcomeMessage);

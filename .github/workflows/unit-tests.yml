@@ -19,27 +19,23 @@ jobs:
         with:
           node-version: 18
 
-      - name: Fetch latest changes
-        run: git fetch origin
-
       - name: Determine Modified Folders
         id: changes
         run: |
-          folders=$(git diff --name-only origin/develop origin/${{ github.event.pull_request.head.ref }} | xargs -I % dirname % | sort -u)
-          if [[ "$folders" == "backend-api"* ]]; then
-            echo "Modified folders: $folders"
-          else
-            echo "No backend-api folder changes. Skipping tests."
-            exit 0
-          fi
-          for folder in $folders; do
-            echo "Running tests in $folder..."
-            cd $folder
-            npm ci
-            npm test
-            mkdir -p ../test-results/$folder
-            cp -r test-results/* ../test-results/$folder
-            cd ..
+          for folder in backend-api/*; do
+            if [ -d "$folder" ]; then
+              cd "$folder"
+              echo "Installing dependencies in  $folder"
+              npm ci
+              echo "Running tests in $folder..."
+              npm test
+              echo "Creating test-results structure for $folder..."
+              mkdir -p ../test-results/$folder
+              echo "Copying test-results structure for $folder..."
+              cp -r test-results/* ../test-results/$folder
+              cd ..
+            fi
+            echo "Completed running tests in backend-api folder..."
           done
 
       - name: Save Test Results
