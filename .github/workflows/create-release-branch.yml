@@ -23,17 +23,28 @@ jobs:
 
       - name: Select Microservices
         id: checkbox
-        uses: technote-space/github-action-checkbox@v1
-        with:
-          options: ${{ env.microservices }}
+        run: |
+          echo "MICROSERVICES=${{ steps.checkbox.outputs.result }}" >> $GITHUB_ENV
+        env:
+          OPTIONS: |
+            microservice-one
+            microservice-two
+            lib
+          DEFAULTS: |
+            true
+            false
+            true
+          INPUTS: |
+            ${{ env.OPTIONS }}
+            ${{ env.DEFAULTS }}
 
       - name: Merge changes from develop
         run: |
-          SELECTED_MICROSERVICES="${{ steps.checkbox.outputs.result }}"
-          IFS=',' read -ra SERVICES <<< "$SELECTED_MICROSERVICES"
+          SELECTED_MICROSERVICES="${{ env.MICROSERVICES }}"
+          IFS=$'\n' read -d '' -ra SERVICES <<< "$SELECTED_MICROSERVICES"
           for SERVICE in "${SERVICES[@]}"; do
-            git checkout "release/${{ github.event.inputs.release-version }}"
+            git checkout release/$RELEASE_VERSION
             git merge develop --no-commit --no-ff --strategy-option=ours -- backend/$SERVICE
           done
           git commit -m "Merge changes from develop for microservices: $SELECTED_MICROSERVICES"
-          git push origin "release/${{ github.event.inputs.release-version }}"
+          git push origin release/$RELEASE_VERSION
