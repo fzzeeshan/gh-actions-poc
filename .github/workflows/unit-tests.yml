@@ -26,13 +26,8 @@ jobs:
         id: changes
         run: |
           folders=$(git diff --name-only origin/develop origin/${{ github.event.pull_request.head.ref }} | xargs -I % dirname % | sort -u)
-          echo "{FOLDERS}={$folders}" >> $GITHUB_ENV
-
-      - name: Check Modified Folders
-        id: check-folders
-        run: |
-          if [[ "${{ env.FOLDERS }}" == "backend-api"* ]]; then
-            echo "Modified folders: ${{ env.FOLDERS }}"
+          if [[ "$folders" == "backend-api"* ]]; then
+            echo "Modified folders: $folders"
           else
             echo "No backend-api folder changes. Skipping tests."
             exit 0
