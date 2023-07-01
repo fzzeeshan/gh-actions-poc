@@ -26,7 +26,7 @@ jobs:
         uses: actions/create-release@v1
         with:
           tag_name: v${{ steps.get_current_date.outputs.current_date }}
-          release_name: Release v${{ steps.get_current_date.outputs.current_date }}
+          release_name: Release v1${{ steps.get_current_date.outputs.current_date }}
           draft: false
           prerelease: false
         env:
@@ -37,7 +37,6 @@ jobs:
         run: echo "::set-output name=commit_sha::$(git rev-parse HEAD)"
 
       - name: Create Tag
-        if: steps.create_release.outputs.release_id
         run: |
           git tag v1.0.0 ${{ steps.get_commit_sha.outputs.commit_sha }}
           git push origin --tags
