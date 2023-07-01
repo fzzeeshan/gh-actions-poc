@@ -25,7 +25,7 @@ jobs:
       - name: Determine Modified Folders
         id: changes
         run: |
-          echo "FOLDERS=$(git diff --name-only origin/develop ${{ github.event.pull_request.head.ref }} | awk -F/ '{print $1"/"$2}' | sort -u)" >> $GITHUB_ENV
+          echo "FOLDERS=$(git diff --name-only origin/develop origin/${{ github.event.pull_request.head.ref }} | awk -F/ '{print $1"/"$2}' | sort -u)" >> $GITHUB_ENV
 
       - name: Check Modified Folders
         id: check-folders
