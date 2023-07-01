@@ -6,6 +6,13 @@ on:
       release-version:
         description: "Release branch version"
         required: true
+      microservices:
+        description: "Select microservices"
+        required: true
+        default: |
+          microservice-one
+          microservice-two
+          lib
 
 jobs:
   create-release-branch:
@@ -15,30 +22,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Select Microservices
-        id: checkbox
-        run: |
-          echo "MICROSERVICES=${{ steps.checkbox.outputs.result }}" >> $GITHUB_ENV
-        env:
-          OPTIONS: |
-            microservice-one
-            microservice-two
-            lib
-          DEFAULTS: |
-            true
-            false
-            true
-          INPUTS: |
-            ${{ env.OPTIONS }}
-            ${{ env.DEFAULTS }}
-
       - name: Merge changes from develop
         run: |
-          SELECTED_MICROSERVICES="${{ env.MICROSERVICES }}"
+          SELECTED_MICROSERVICES="${{ github.event.inputs.microservices }}"
           IFS=$'\n' read -d '' -ra SERVICES <<< "$SELECTED_MICROSERVICES"
           for SERVICE in "${SERVICES[@]}"; do
-            git checkout release/$RELEASE_VERSION
+            git checkout release/${{ github.event.inputs.release-version }}
             git merge develop --no-commit --no-ff --strategy-option=ours -- backend/$SERVICE
           done
           git commit -m "Merge changes from develop for microservices: $SELECTED_MICROSERVICES"
-          git push origin release/$RELEASE_VERSION
+          git push origin release/${{ github.event.inputs.release-version }}
+          
