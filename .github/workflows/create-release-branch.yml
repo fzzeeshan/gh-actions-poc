@@ -15,12 +15,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Fetch microservice options
-        id: fetch-microservices
-        run: |
-          MICROSERVICES=$(git ls-tree --name-only develop:backend-api)
-          echo "{microservices}={$MICROSERVICES}" >> "$GITHUB_ENV"
-
       - name: Select Microservices
         id: checkbox
         run: |
