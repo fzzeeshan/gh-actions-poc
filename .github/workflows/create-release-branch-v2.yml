@@ -26,6 +26,7 @@ jobs:
           previous_version=${previous_version:-0}
           next_version=$(($previous_version+1))
           branch_name="release/app-name-${month_year}-$next_version"
+          echo branch_name
           echo "::set-output name=branch_name::$branch_name"
           
       - name: 'Create release branch'
