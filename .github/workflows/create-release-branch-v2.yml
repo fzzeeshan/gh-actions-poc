@@ -1,0 +1,30 @@
+name: Create Release Branch v1.0
+
+jobs:
+  create-release-branch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Determine branch name
+        id: branch_name
+        run: |
+          month_year=$(date + '%m%Y')
+          previous_version=$(git tag | grep "${month_year}-" | tail -n 1 | cut -d'-' -f 3)
+          previous_version=${previous_version:-0}
+          next_version=$(($previous_version+1))
+          branch_name="release/app-name-${month_year}-$next_version"
+          echo "::set-output name=branch_name::$branch_name"
+
+  -name: Create release branch
+    run: |
+        git branch ${{ steps.branch_name.outputs.branch_name }}
+        git checkout ${{ steps.branch_name.outputs.branch_name}}
+        git push origin $ {{ steps.branch_name.out.puts.branch_name }}
