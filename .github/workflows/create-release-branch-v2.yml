@@ -33,6 +33,8 @@ jobs:
       - name: Create release branch
         run: |
           git fetch --all
-          git checkout main          
+          git checkout main    
+          echo 'going to print something'
+          echo ${{ steps.branch_name.outputs.branch_name}}
           git checkout -b ${{ steps.branch_name.outputs.branch_name}}
           git push -u origin $ {{ steps.branch_name.out.puts.branch_name }}
