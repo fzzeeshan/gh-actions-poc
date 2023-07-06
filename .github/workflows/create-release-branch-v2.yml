@@ -23,7 +23,7 @@ jobs:
       - name: Determine branch name
         id: branch_name
         run: |
-          month_year=$(date + '%m%Y')
+          month_year=$(date -u + '%m%Y')
           previous_version=$(git tag | grep "${month_year}-" | tail -n 1 | cut -d'-' -f 3)
           previous_version=${previous_version:-0}
           next_version=$(($previous_version+1))
