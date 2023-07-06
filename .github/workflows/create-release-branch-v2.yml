@@ -1,4 +1,11 @@
-name: Create Release Branch v1.0
+name: Create Release Branch v2.0
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch name'
+        required: true
 
 jobs:
   create-release-branch:
