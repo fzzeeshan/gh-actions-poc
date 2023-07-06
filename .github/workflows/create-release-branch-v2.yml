@@ -32,11 +32,14 @@ jobs:
           next_version=$(($previous_version+1))
           branch_name="release/app-name-${month_year}-$next_version"
           echo "::set-output name=branch_name::$branch_name"
-
-      - name: Create release branch
-        run: |
-          git fetch --all
-          git checkout ${{ github.event.inputs.branch }}
-          echo ${{ steps.branch_name.outputs.branch_name}}
-          git checkout -b ${{ steps.branch_name.outputs.branch_name}}
-          git push -u origin ${{ steps.branch_name.outputs.branch_name }}
+          
+      - name: 'Create release branch'
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/heads/release/v${{ steps.branch_name.outputs.branch_name }}',
+              sha: context.sha
+            })    
