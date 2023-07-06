@@ -6,6 +6,7 @@ on:
       branch:
         description: 'Branch name'
         required: true
+        default: 'develop'
 
 jobs:
   create-release-branch:
@@ -14,6 +15,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
 
       - name: Set up Git
         run: |
@@ -33,8 +36,7 @@ jobs:
       - name: Create release branch
         run: |
           git fetch --all
-          git checkout main    
-          echo 'going to print something'
+          git checkout ${{ github.event.inputs.branch }}
           echo ${{ steps.branch_name.outputs.branch_name}}
           git checkout -b ${{ steps.branch_name.outputs.branch_name}}
           git push -u origin ${{ steps.branch_name.outputs.branch_name }}
