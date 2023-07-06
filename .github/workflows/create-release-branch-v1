@@ -1,4 +1,4 @@
-name: Create Release Branch
+name: Create Release Branch v1.0
 
 jobs:
   create-release-branch:
